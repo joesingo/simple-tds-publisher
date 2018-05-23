@@ -1,8 +1,9 @@
-# ukcp-publisher
+# simple-tds-publisher
 
 This repo contains bash scripts to create THREDDS catalogs and NcML
-aggregations using the [tds-utils](https://github.com/cedadev/tds-utils)
-library, and make them available in THREDDS.
+aggregations from lists of files using the
+[tds-utils](https://github.com/cedadev/tds-utils) library, and make them
+available in THREDDS.
 
 It should be used in conjunction with this ansible playbook:
 [ukcp18 TDS playbook](https://breezy.badc.rl.ac.uk/jsingleton/tds-playbook/tree/ukcp18)
