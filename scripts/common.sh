@@ -34,9 +34,11 @@ get_catalog_paths() {
 
 reinit() {
     password=`cat "$PASSWORD_FILE"`
-    url="https://admin:${password}@${SERVER_NAME}/thredds/admin/debug?catalogs/reinit"
-    if ! curl --insecure "$url" >/dev/null 2>&1; then
-        die "failed to reload catalogs"
+    url="https://${THREDDS_USER}:${password}@${SERVER_NAME}/thredds/admin/debug?catalogs/reinit"
+    status=`curl --insecure -o /dev/null -w "%{http_code}" "$url" 2>/dev/null` || \
+        die "failed to load catalog reinit URL"
+    if [[ $status != 200 ]]; then
+        die "failed to reload catalogs -- got HTTP status $status"
     fi
 }
 
