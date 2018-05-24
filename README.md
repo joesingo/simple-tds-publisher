@@ -5,7 +5,7 @@ aggregations from lists of files using the
 [tds-utils](https://github.com/cedadev/tds-utils) library, and make them
 available in THREDDS.
 
-It should be used in conjunction with this ansible playbook:
+It can be used in conjunction with this ansible playbook:
 [ukcp18 TDS playbook](https://breezy.badc.rl.ac.uk/jsingleton/tds-playbook/tree/ukcp18)
 
 # Installation
@@ -20,11 +20,21 @@ source ${venv}/bin/activate
 pip install git+https://github.com/cedadev/tds-utils.git
 ```
 
-Constants defining where to store catalogs, THREDDS root directory etc are
-sourced from a shell script at `/var/lib/tomcat/content/thredds/set_thredds_dirs.sh`.
-This file is created by the ansible playbook.
-
 # Usage
+
+Some environment variables need to be set before calling `./publish.sh`:
+
+| Name            | Description |
+| --------------- | ----------- |
+| `SERVER_NAME`   | Hostname of the THREDDS server (used to construct the catalog reinit URL) |
+| `THREDDS_ROOT`  | THREDDS content directory in Tomcat `content` directory (required to know where to write root catalog) |
+| `THREDDS_USER`  | Username of THREDDS admin user (set in `tomcat-users.xml`) |
+| `PASSWORD_FILE` | File containing password for THREDDS admin user |
+| `CATALOG_DIR`   | Directory in which to store generated THREDDS catalogs |
+| `NCML_DIR`      | As above but for NcML aggregations |
+
+If using the ansible playbook these can be set by sourcing
+`/var/lib/tomcat/content/thredds/set_thredds_dirs.sh`.
 
 There are 3 commands: `./publish.sh add`, `./publish.sh rm` and `./publish.sh ls`.
 Usage is as follows:

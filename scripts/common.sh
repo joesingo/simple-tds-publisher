@@ -48,8 +48,14 @@ create_root_cat() {
 }
 
 #-----------------------------------------------------------------------------#
-# Set constants
+# Check required env variables are set
+[[ -n "$SERVER_NAME" ]]   || die "SERVER_NAME not set"
+[[ -n "$THREDDS_ROOT" ]]  || die "THREDDS_ROOT not set"
+[[ -n "$THREDDS_USER" ]]  || die "THREDDS_USER not set"
+[[ -n "$PASSWORD_FILE" ]] || die "PASSWORD_FILE not set"
+[[ -n "$CATALOG_DIR" ]]   || die "CATALOG_DIR not set"
+[[ -n "$NCML_DIR" ]]      || die "NCML_DIR not set"
 
-source "/var/lib/tomcat/content/thredds/set_thredds_dirs.sh"
+# Set constants
 THREDDS_BASE_URL="https://${SERVER_NAME}/thredds"
 ROOT_CATALOG="${THREDDS_ROOT}/catalog.xml"
