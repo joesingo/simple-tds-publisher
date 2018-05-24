@@ -32,16 +32,22 @@ Usage is as follows:
 ## add
 
 ```
-Usage: publish.sh add [-h] -f FILE_LIST -n DATASET_NAME
-Create a THREDDS catalog and NcML aggregation from files in FILE_LIST,
+Usage:
+  publish.sh add [-h] -n DATASET_NAME NETCDF_FILE ...
+  publish.sh add [-h] -n DATASET_NAME -r FILE
+
+Create a THREDDS catalog and NcML aggregation from files given,
 re-create the root catalog, and reinit THREDDS.
 
 Options:
-  -f FILE_LIST        Read paths to NetCDF files from FILE_LIST. Paths should
-                      be separated by newlines. Use - to read from stdin.
+  -r FILE             Read paths to NetCDF files from FILE. Paths should be
+                      separated by newlines. Use - to read from stdin.
   -n DATASET_NAME     Name for the new catalog
   -h                  Show this help and exit
 ```
+
+The first form allows globs to be used -- e.g.
+`./publish.sh add -n mydata /some/path/*/18/*.nc`.
 
 ## rm
 

@@ -25,7 +25,7 @@ get_catalog_path() {
 
 # Usage: get_ncml_path DATASET_NAME
 get_ncml_path() {
-    echo "${NCML_DIR}/${1}.xml"
+    echo "${NCML_DIR}/${1}.ncml"
 }
 
 get_catalog_paths() {

@@ -2,13 +2,16 @@
 
 usage() {
     cat <<EOF
-Usage: $PROG add [-h] -f FILE_LIST -n DATASET_NAME
-Create a THREDDS catalog and NcML aggregation from files in FILE_LIST,
+Usage:
+  $PROG add [-h] -n DATASET_NAME NETCDF_FILE ...
+  $PROG add [-h] -n DATASET_NAME -r FILE
+
+Create a THREDDS catalog and NcML aggregation from files given,
 re-create the root catalog, and reinit THREDDS.
 
 Options:
-  -f FILE_LIST        Read paths to NetCDF files from FILE_LIST. Paths should
-                      be separated by newlines. Use - to read from stdin.
+  -r FILE             Read paths to NetCDF files from FILE. Paths should be
+                      separated by newlines. Use - to read from stdin.
   -n DATASET_NAME     Name for the new catalog
   -h                  Show this help and exit
 EOF
@@ -16,31 +19,41 @@ EOF
 
 #-----------------------------------------------------------------------------#
 
-while getopts hf:n: opt; do
+while getopts hr:n: opt; do
     case "$opt" in
-        h)
-            usage
-            exit 0
-            ;;
-        f)
-            file_list="$OPTARG"
-            ;;
-        n)
-            dataset_name="$OPTARG"
-            ;;
+        h) usage
+           exit 0
+           ;;
+        r) file_list="$OPTARG"
+           ;;
+        n) dataset_name="$OPTARG"
+           ;;
     esac
 done
+shift $((OPTIND - 1))
 
-if [[ -z $file_list || -z $dataset_name ]]; then
+# Check arguments
+if [[ -z $dataset_name ]]; then
+    usage >&2
+    exit 1
+elif [[ -z $file_list && -z $@ ]]; then
+    warn "Use -r option or list datasets on command line"
     usage >&2
     exit 1
 fi
 
-# Copy stdin to a temp file if file given is '-'
-if [[ $file_list = "-" ]]; then
+# Write file list to a file if reading from stdin or listing files on command
+# line
+if [[ -z $file_list || $file_list = "-" ]]; then
     made_temp=yes
-    file_list=`mktemp`
-    cat > "$file_list"
+    temp_file=`mktemp`
+
+    if [[ $file_list = "-" ]]; then
+        cat > "$temp_file"
+    else
+        echo "$@" | sed 's, ,\n,g' > "$temp_file"
+    fi
+    file_list="$temp_file"
 fi
 
 catalog_path=`get_catalog_path "$dataset_name"`
